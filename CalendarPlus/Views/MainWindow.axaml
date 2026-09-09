@@ -1,20 +1,142 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:CalendarPlus.ViewModels"
+        xmlns:models="using:CalendarPlus.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="650"
         x:Class="CalendarPlus.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="CalendarPlus">
+        Title="CalendarPlus"
+        Width="450"
+        Height="650"
+        WindowStartupLocation="CenterScreen">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Window.Styles>
+        <!-- Day Cell Border Style -->
+        <Style Selector="Border.day-cell">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style Selector="Border.day-cell:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2Opacity20}"/>
+        </Style>
+
+        <Style Selector="Border.day-cell.selected">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"/>
+            <Setter Property="TextElement.Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Border.day-cell.selected:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}"/>
+        </Style>
+
+        <!-- Day Cell Text Style -->
+        <Style Selector="TextBlock.day-cell-text">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
+        <Style Selector="TextBlock.day-cell-text.other-month">
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}"/>
+        </Style>
+
+        <Style Selector="TextBlock.day-cell-text.today">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}"/>
+        </Style>
+
+        <!-- Weekday Header Style -->
+        <Style Selector="TextBlock.weekday-header">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}"/>
+            <Setter Property="Padding" Value="0,8"/>
+        </Style>
+
+        <!-- Month Navigation Button Style -->
+        <Style Selector="Button.nav-button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,4"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+        </Style>
+
+        <Style Selector="Button.nav-button:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2Opacity20}"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+        <!-- Month/Year Header with Navigation -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="16,12">
+            <Button Content="&#xE76B;" Classes="nav-button" Command="{Binding PreviousMonthCommand}" 
+                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding HeaderText}" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="18" FontWeight="SemiBold" Margin="12,0"/>
+            <Button Content="&#xE76C;" Classes="nav-button" Command="{Binding NextMonthCommand}" 
+                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                    HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Weekday Headers -->
+        <UniformGrid Grid.Row="1" Columns="7" Margin="8,4">
+            <TextBlock Text="Sun" Classes="weekday-header"/>
+            <TextBlock Text="Mon" Classes="weekday-header"/>
+            <TextBlock Text="Tue" Classes="weekday-header"/>
+            <TextBlock Text="Wed" Classes="weekday-header"/>
+            <TextBlock Text="Thu" Classes="weekday-header"/>
+            <TextBlock Text="Fri" Classes="weekday-header"/>
+            <TextBlock Text="Sat" Classes="weekday-header"/>
+        </UniformGrid>
+
+        <!-- Divider -->
+        <Border Grid.Row="2" Height="1" Margin="8,0" Background="{DynamicResource SystemControlForegroundBaseLowBrush}"/>
+
+        <!-- Calendar Grid (6 weeks) -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Weeks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DateCell">
+                                            <Border Classes="day-cell" 
+                                                    Classes.Contains.selected="{Binding IsSelected}"
+                                                    Tapped="DayCell_Tapped">
+                                                <TextBlock Text="{Binding Day}" 
+                                                           Classes="day-cell-text"
+                                                           Classes.Contains.other-month="{Binding !IsCurrentMonth}"
+                                                           Classes.Contains.today="{Binding IsToday}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 
 </Window>
