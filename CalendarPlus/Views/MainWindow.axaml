@@ -121,12 +121,12 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="models:DateCell">
                                             <Border Classes="day-cell" 
-                                                    Classes.Contains.selected="{Binding IsSelected}"
+                                                    Classes.selected="{Binding IsSelected}"
                                                     Tapped="DayCell_Tapped">
                                                 <TextBlock Text="{Binding Day}" 
                                                            Classes="day-cell-text"
-                                                           Classes.Contains.other-month="{Binding !IsCurrentMonth}"
-                                                           Classes.Contains.today="{Binding IsToday}"/>
+                                                           Classes.other-month="{Binding !IsCurrentMonth}"
+                                                           Classes.today="{Binding IsToday}"/>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
