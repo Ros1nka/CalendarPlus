@@ -1,0 +1,57 @@
+# --- JetBrains Rider & ReSharper ---
+.idea/
+*.sln.DotSettings.user
+*.sln.DotSettings
+*.csproj.DotSettings
+*.userprefs
+*.suo
+
+.gigacode/
+CalendarPlus/obj/
+
+# --- Visual Studio (на всякий случай) ---
+.vs/
+*.user
+*.cache
+*.log
+
+# --- Результаты сборки (Binaries & Objects) ---
+[Bb]in/
+[Oo]bj/
+out/
+[Ll]og/
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.mdb
+
+# --- NuGet ---
+packages/
+*.nupkg
+*.snupkg
+
+# --- Тесты ---
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+TestResult.xml
+
+# --- Файлы ОС ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Локальные секреты и конфиги ---
+appsettings.*.json
+!appsettings.json
+.env
+*.secret
+
+# --- SQLite (Важно для вашего проекта!) ---
+# Если база данных создается локально при запуске, игнорируйте её, 
+# чтобы не коммитить тестовые данные.
+# Раскомментируйте строки ниже, если база генерируется автоматически:
+# *.db
+# *.sqlite
+# *.sqlite3
+# !Migrations/ (если используете миграции, их нужно коммитить)

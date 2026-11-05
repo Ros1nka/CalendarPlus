@@ -64,7 +64,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         Weeks = weeks;
-        HeaderText = CurrentMonthDate.ToString("MMMM yyyy");
+        HeaderText = CurrentMonthDate.ToString("MMMM yyyy").ToUpper();
     }
 
     [RelayCommand]
