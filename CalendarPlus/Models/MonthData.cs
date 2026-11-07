@@ -10,6 +10,9 @@ public partial class MonthData : ObservableObject
     private string _monthName;
     
     [ObservableProperty]
+    private string _year;
+    
+    [ObservableProperty]
     private int _firstColumn;
     
     public ObservableCollection<DateCell> Days { get; set; }
@@ -20,23 +23,21 @@ public partial class MonthData : ObservableObject
         
         var result = new MonthData
         {
-            MonthName = firstDay.ToString("MMMM yyyy"),
+            MonthName = firstDay.ToString("MMMM"),
+            Year = firstDay.ToString("yyyy"),
             FirstColumn = (int)firstDay.DayOfWeek, // День недели первого дня
             Days = new ObservableCollection<DateCell>()
         };
         
-        // Заполнители БОЛЬШЕ НЕ НУЖНЫ!
-        
         // Дни месяца
         int daysInMonth = DateTime.DaysInMonth(year, month);
+        
+        bool isCurrent = month == DateTime.Today.Month && year == DateTime.Today.Year;
+        int dayOfCurrentMonth = isCurrent ? DateTime.Today.Day : 0;
+        
         for (int day = 1; day <= daysInMonth; day++)
         {
-            result.Days.Add(new DateCell (day, true, new DateTime(year, month, day) == DateTime.Today)
-            { 
-                Day = day,
-                IsCurrentMonth = true,
-                IsToday = new DateTime(year, month, day) == DateTime.Today
-            });
+            result.Days.Add(new DateCell(day, isCurrent, isCurrent && day == dayOfCurrentMonth));
         }
         
         return result;
