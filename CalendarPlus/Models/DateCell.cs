@@ -5,23 +5,26 @@ namespace CalendarPlus.Models;
 
 public partial class DateCell : ObservableObject
 {
-    [ObservableProperty]
-    private int _day;
+    public DateTime Date { get; }
+    
+    public int Day { get; }
 
-    [ObservableProperty]
-    private bool _isCurrentMonth;
-
-    [ObservableProperty]
-    private bool _isToday;
+    public DayOfWeek DayOfWeek { get; }
+    
+    public bool IsWeekend => DayOfWeek == DayOfWeek.Saturday || DayOfWeek == DayOfWeek.Sunday;
 
     [ObservableProperty]
     private bool _isSelected;
 
-    public DateCell(int day, bool isCurrentMonth, bool isToday)
+    public bool IsCurrentMonth { get; }
+    public bool IsToday { get; }
+
+    public DateCell(int day, int month, int year, bool isCurrentMonth, bool isToday)
     {
-        _day = day;
-        _isCurrentMonth = isCurrentMonth;
-        _isToday = isToday;
-        _isSelected = false;
+        Date = new DateTime(year, month, day);
+        Day = day;
+        DayOfWeek = Date.DayOfWeek;
+        IsCurrentMonth = isCurrentMonth;
+        IsToday = isToday;
     }
 }

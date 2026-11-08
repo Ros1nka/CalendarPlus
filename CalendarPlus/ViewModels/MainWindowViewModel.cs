@@ -1,97 +1,85 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CalendarPlus.Models;
+using SkiaSharp;
 
 namespace CalendarPlus.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private DateTime _currentMonthDate = DateTime.Today;
-
-    [ObservableProperty]
-    private DateTime? _selectedDate = DateTime.Today;
-
-    private ObservableCollection<ObservableCollection<DateCell>> _weeks = new();
-    public ObservableCollection<ObservableCollection<DateCell>> Weeks
-    {
-        get => _weeks;
-        set => SetProperty(ref _weeks, value);
-    }
-
-    private string _headerText = string.Empty;
-    public string HeaderText
-    {
-        get => _headerText;
-        set => SetProperty(ref _headerText, value);
-    }
+    [ObservableProperty] private ObservableCollection<MonthData> _months = [];
+    [ObservableProperty] private DateCell? _selectedCell;
+    [ObservableProperty] private DateTime _currentDate = DateTime.Now;
 
     public MainWindowViewModel()
     {
-        GenerateCalendar();
+        LoadInitialMonths();
     }
 
-    private void GenerateCalendar()
+    private void LoadInitialMonths()
     {
-        var weeks = new ObservableCollection<ObservableCollection<DateCell>>();
-        var firstDayOfMonth = new DateTime(CurrentMonthDate.Year, CurrentMonthDate.Month, 1);
-        var firstDayOfWeek = (int)firstDayOfMonth.DayOfWeek; // 0=Sunday, 6=Saturday
+        Months.Clear();
+        
+        DateTime startDate = CurrentDate.AddMonths(-1);
 
-        var startDate = firstDayOfMonth.AddDays(-firstDayOfWeek);
-        var today = DateTime.Today;
-
-        for (int week = 0; week < 6; week++)
+        for (int i = 0; i < 5; i++)
         {
-            var weekCells = new ObservableCollection<DateCell>();
-            for (int day = 0; day < 7; day++)
-            {
-                var currentDate = startDate.AddDays(week * 7 + day);
-                var isCurrentMonth = currentDate.Month == CurrentMonthDate.Month;
-                var isToday = currentDate.Date == today.Date;
-                var cell = new DateCell(currentDate, isCurrentMonth, isToday);
-
-                if (isToday)
-                {
-                    cell.IsSelected = true;
-                    SelectedDate = currentDate;
-                }
-
-                weekCells.Add(cell);
-            }
-            weeks.Add(new ObservableCollection<DateCell>(weekCells));
+            DateTime targetDate = startDate.AddMonths(i);
+            
+            Months.Add(MonthData.Create(targetDate.Year, targetDate.Month));
         }
-
-        Weeks = weeks;
-        HeaderText = CurrentMonthDate.ToString("MMMM yyyy").ToUpper();
     }
 
     [RelayCommand]
     private void PreviousMonth()
     {
-        CurrentMonthDate = CurrentMonthDate.AddMonths(-1);
-        GenerateCalendar();
+        // Берем самый первый месяц и отнимаем 1 месяц
+        var newMonthDate = Months.First().Date.AddMonths(-1);
+        
+        Months.Insert(0, MonthData.Create(newMonthDate.Year, newMonthDate.Month));
+        
+        // Оптимизация: Удаляем последний месяц, чтобы коллекция не росла бесконечно (держим 3 месяца)
+        if (Months.Count > 8)
+        {
+            Months.RemoveAt(Months.Count - 1);
+        }
     }
 
     [RelayCommand]
     private void NextMonth()
     {
-        CurrentMonthDate = CurrentMonthDate.AddMonths(1);
-        GenerateCalendar();
+        // Берем последний месяц и прибавляем 1 месяц.
+        var newMonthDate = Months.Last().Date.AddMonths(1);
+        
+        Months.Add(MonthData.Create(newMonthDate.Year, newMonthDate.Month));
+        
+        // Оптимизация: Удаляем первый месяц, чтобы коллекция не росла бесконечно
+        if (Months.Count > 8)
+        {
+            Months.RemoveAt(0);
+        }
     }
 
     [RelayCommand]
     private void SelectDay(DateCell cell)
     {
-        foreach (var week in Weeks)
+        // Если ячейка уже выбрана, ничего не делаем
+        if (SelectedCell == cell) return;
+
+        // Снимаем выделение только с предыдущей выбранной ячейки (O(1) вместо O(N))
+        if (SelectedCell != null)
         {
-            foreach (var c in week)
-            {
-                c.IsSelected = false;
-            }
+            SelectedCell.IsSelected = false;
         }
+
+        // Выделяем новую и запоминаем её
         cell.IsSelected = true;
-        SelectedDate = cell.CellDate;
+        SelectedCell = cell;
+        
+        // Опционально: обновляем текущую дату вьюмодели для заголовка или других нужд
+        // CurrentDate = new DateTime(...); 
     }
 }

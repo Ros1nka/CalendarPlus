@@ -14,174 +14,131 @@
         Height="650"
         WindowStartupLocation="CenterScreen">
 
-    <Window.Resources>
-        <converters:StringToCharsConverter x:Key="StringToChars" />
-    </Window.Resources>
-
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Window.Styles>
-        <!-- Day Cell Border Style -->
-        <Style Selector="Border.day-cell">
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="2" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-        </Style>
+    <Window.Resources>
+        <converters:StringToCharsConverter x:Key="StringToChars" />
+    </Window.Resources>
 
-        <Style Selector="Border.day-cell:pointerover">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2Opacity20}" />
-        </Style>
-
-        <Style Selector="Border.day-cell.selected">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
-            <Setter Property="TextElement.Foreground" Value="White" />
-        </Style>
-
-        <Style Selector="Border.day-cell.selected:pointerover">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}" />
-        </Style>
-
-        <!-- Day Cell Text Style -->
-        <Style Selector="TextBlock.day-cell-text">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="FontWeight" Value="Normal" />
-        </Style>
-
-        <Style Selector="TextBlock.day-cell-text.other-month">
-            <Setter Property="Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}" />
-        </Style>
-
-        <Style Selector="TextBlock.day-cell-text.today">
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
-        </Style>
-
-        <!-- Weekday Header Style -->
-        <Style Selector="TextBlock.weekday-header">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="11" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}" />
-            <Setter Property="Padding" Value="0,8" />
-        </Style>
-
-        <!-- Month Navigation Button Style -->
-        <Style Selector="Button.nav-button">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="12,4" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-        </Style>
-
-        <Style Selector="Button.nav-button:pointerover">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2Opacity20}" />
-        </Style>
-    </Window.Styles>
-
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, *">
-
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+        <!-- Month/Year Header with Navigation -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="16,12">
             <Button Content="&#xE76B;" Classes="nav-button" Command="{Binding PreviousMonthCommand}"
                     FontFamily="{DynamicResource SymbolThemeFontFamily}"
                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Months.Count}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="18" FontWeight="SemiBold" Margin="12,0" />
+            <TextBlock Text="{Binding Months[1].MonthName}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="18" FontWeight="SemiBold" Margin="12,0" />
             <Button Content="&#xE76C;" Classes="nav-button" Command="{Binding NextMonthCommand}"
                     FontFamily="{DynamicResource SymbolThemeFontFamily}"
                     HorizontalAlignment="Right" VerticalAlignment="Center" />
         </StackPanel>
 
+        <!-- Weekday Headers -->
+        <UniformGrid Grid.Row="1" Columns="7" Margin="58,4, 8, 4">
+            <TextBlock Text="Пн" Classes="weekday-header" />
+            <TextBlock Text="Вт" Classes="weekday-header" />
+            <TextBlock Text="Ср" Classes="weekday-header" />
+            <TextBlock Text="Чт" Classes="weekday-header" />
+            <TextBlock Text="Пт" Classes="weekday-header" />
+            <TextBlock Text="Сб" Classes="weekday-header" />
+            <TextBlock Text="Вс" Classes="weekday-header" />
+        </UniformGrid>
+
         <!-- Divider -->
-        <Border Grid.Row="1" Height="1" Margin="8,0" Background="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+        <Border Grid.Row="2" Height="1" Margin="8,0" Background="{DynamicResource SystemControlForegroundBaseLowBrush}" />
 
-        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Hidden">
-            <Grid ColumnDefinitions="50, *">
-                <!-- Month/Year Header with Navigation -->
-                <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Stretch">
+        <!-- Calendar Grid -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+            <!-- Внешний ItemsControl перебирает коллекцию Months -->
+            <ItemsControl ItemsSource="{Binding Months}">
 
-                    <!-- Поворот на -90°: ширина становится высотой и наоборот -->
-                    <Border Width="200" Height="200">
-                        <TextBlock Text="{Binding HeaderText}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="18"
-                                   FontWeight="SemiBold">
-                            <TextBlock.RenderTransform>
-                                <RotateTransform Angle="-90" />
-                            </TextBlock.RenderTransform>
-                        </TextBlock>
-                    </Border>
+                <!-- 1. ЗАДАЕМ ШАБЛОН ДЛЯ ОДНОГО МЕСЯЦА (MonthData) -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:MonthData">
 
-                    <Grid>
-                        <ItemsControl ItemsSource="{Binding HeaderText, Converter={StaticResource StringToChars}}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical" Spacing="0" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}"
-                                               FontFamily="Courier New"
-                                               HorizontalAlignment="Center"
-                                               FontSize="18"
-                                               FontWeight="SemiBold" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Grid>
-                </StackPanel>
+                        <!-- DataContext = текущий объект MonthData -->
+                        <Grid ColumnDefinitions="50, *" Margin="0,8">
 
-                <StackPanel Grid.Column="1">
-                    <!-- Weekday Headers -->
-                    <UniformGrid Columns="7" Margin="8,4">
-                        <TextBlock Text="Пн" Classes="weekday-header" />
-                        <TextBlock Text="Вт" Classes="weekday-header" />
-                        <TextBlock Text="Ср" Classes="weekday-header" />
-                        <TextBlock Text="Чт" Classes="weekday-header" />
-                        <TextBlock Text="Пт" Classes="weekday-header" />
-                        <TextBlock Text="Сб" Classes="weekday-header" />
-                        <TextBlock Text="Вс" Classes="weekday-header" />
-                    </UniformGrid>
+                            <!-- Заголовок месяца -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center"
+                                        Spacing="18">
+                                <ItemsControl
+                                    ItemsSource="{Binding MonthName, Converter={StaticResource StringToChars}}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" Spacing="0" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}"
+                                                       HorizontalAlignment="Center"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       FontFamily="{StaticResource PTMono}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                    <!-- Divider -->
-                    <Border Grid.Row="1" Height="1" Margin="8,0"
-                            Background="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+                                <ItemsControl
+                                    ItemsSource="{Binding Year, Converter={StaticResource StringToChars}}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" Spacing="2" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Bottom"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       FontFamily="{StaticResource PTMono}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
 
-                    <!-- Calendar Grid -->
-                    <StackPanel Grid.Column="1">
-                        <ItemsControl ItemsSource="{Binding Weeks}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <ItemsControl ItemsSource="{Binding}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate x:DataType="models:DateCell">
-                                                    <Border Classes="day-cell"
-                                                            Classes.selected="{Binding IsSelected}"
-                                                            Tapped="DayCell_Tapped">
-                                                        <TextBlock Text="{Binding Day}"
-                                                                   Classes="day-cell-text"
-                                                                   Classes.other-month="{Binding !IsCurrentMonth}"
-                                                                   Classes.today="{Binding IsToday}" />
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
+                            <StackPanel Grid.Column="1">
+                                <!-- Дни месяца с FirstColumn -->
+                                <ItemsControl ItemsSource="{Binding Days}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="7"
+                                                         FirstColumn="{Binding FirstColumn}" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DateCell">
+                                            <Border Classes="day-cell"
+                                                    Classes.selected="{Binding IsSelected}"
+                                                    Tapped="DayCell_Tapped">
+                                                <TextBlock Text="{Binding Day}"
+                                                           Classes="day-cell-text"
+                                                           Classes.other-month="{Binding !IsCurrentMonth}"
+                                                           Classes.today="{Binding IsToday}"
+                                                           Classes.weekend="{Binding IsWeekend}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Разделитель между месяцами -->
+                                <Border Height="1"
+                                        Background="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                                        Margin="8,8,8,0" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
     </Grid>
 

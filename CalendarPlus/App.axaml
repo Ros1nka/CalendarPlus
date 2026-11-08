@@ -3,14 +3,18 @@
              x:Class="CalendarPlus.App"
              xmlns:local="using:CalendarPlus"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
-  
+
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="avares://CalendarPlus/Styles/CalendarStyles.axaml"/>
+        <StyleInclude Source="avares://CalendarPlus/Styles/CalendarStyles.axaml" />
     </Application.Styles>
+
+    <Application.Resources>
+        <FontFamily x:Key="PTMono">avares://CalendarPlus/Assets/Fonts/PTM55FT.ttf#PT Mono</FontFamily>
+    </Application.Resources>
 </Application>

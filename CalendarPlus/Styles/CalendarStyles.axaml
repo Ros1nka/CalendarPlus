@@ -1,0 +1,71 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Day Cell Border Style -->
+    <Style Selector="Border.day-cell">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style Selector="Border.day-cell:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2Opacity20}"/>
+    </Style>
+
+    <Style Selector="Border.day-cell.selected">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"/>
+        <Setter Property="TextBlock.Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="Border.day-cell.selected:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}"/>
+    </Style>
+
+    <!-- Day Cell Text Style -->
+    <Style Selector="TextBlock.day-cell-text">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <Style Selector="TextBlock.day-cell-text.other-month">
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}"/>
+    </Style>
+
+    <Style Selector="TextBlock.day-cell-text.today">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}"/>
+    </Style>
+    
+    <Style Selector="TextBlock.day-cell-text.weekend">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <!-- Weekday Header Style -->
+    <Style Selector="TextBlock.weekday-header">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}"/>
+        <Setter Property="Padding" Value="0,8"/>
+    </Style>
+
+    <!-- Month Navigation Button Style -->
+    <Style Selector="Button.nav-button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="12,4"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+    </Style>
+
+    <Style Selector="Button.nav-button:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2Opacity20}"/>
+    </Style>
+
+</Styles>

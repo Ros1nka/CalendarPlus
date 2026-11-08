@@ -7,26 +7,35 @@ namespace CalendarPlus.Models;
 public partial class MonthData : ObservableObject
 {
     [ObservableProperty]
-    private string _monthName;
+    private DateTime _date;
     
     [ObservableProperty]
-    private string _year;
+    private string _monthName = string.Empty;
+    
+    [ObservableProperty]
+    private string _year  = string.Empty;
     
     [ObservableProperty]
     private int _firstColumn;
     
-    public ObservableCollection<DateCell> Days { get; set; }
+    public ObservableCollection<DateCell> Days { get; } = []; 
     
     public static MonthData Create(int year, int month)
     {
         var firstDay = new DateTime(year, month, 1);
         
+        var monthString = firstDay.ToString("MMMM");
+        var name = char.ToUpper(monthString[0]) + monthString[1..];
+        
+        int dayOfWeek = (int)firstDay.DayOfWeek;
+        int firstColumn = dayOfWeek == 0 ? 6 : dayOfWeek - 1;
+        
         var result = new MonthData
         {
-            MonthName = firstDay.ToString("MMMM"),
+            Date = firstDay,
+            MonthName = name,
             Year = firstDay.ToString("yyyy"),
-            FirstColumn = (int)firstDay.DayOfWeek, // День недели первого дня
-            Days = new ObservableCollection<DateCell>()
+            FirstColumn = firstColumn
         };
         
         // Дни месяца
@@ -37,7 +46,13 @@ public partial class MonthData : ObservableObject
         
         for (int day = 1; day <= daysInMonth; day++)
         {
-            result.Days.Add(new DateCell(day, isCurrent, isCurrent && day == dayOfCurrentMonth));
+            result.Days.Add(new DateCell(
+                day, 
+                month, 
+                year,
+                isCurrent, 
+                isCurrent && day == dayOfCurrentMonth
+            ));
         }
         
         return result;
