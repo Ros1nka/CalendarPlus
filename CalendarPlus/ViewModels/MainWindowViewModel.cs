@@ -11,7 +11,7 @@ namespace CalendarPlus.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty] private ObservableCollection<MonthData> _months = [];
-    [ObservableProperty] private DateCell? _selectedCell;
+    [ObservableProperty] private DateCell? _selectedDate;
     [ObservableProperty] private DateTime _currentDate = DateTime.Now;
 
     public MainWindowViewModel()
@@ -64,22 +64,19 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void SelectDay(DateCell cell)
+    private void SelectDay(DateCell clickedCell)
     {
         // Если ячейка уже выбрана, ничего не делаем
-        if (SelectedCell == cell) return;
+        if (SelectedDate == clickedCell) return;
 
         // Снимаем выделение только с предыдущей выбранной ячейки (O(1) вместо O(N))
-        if (SelectedCell != null)
+        if (SelectedDate != null)
         {
-            SelectedCell.IsSelected = false;
+            SelectedDate.IsSelected = false;
         }
 
-        // Выделяем новую и запоминаем её
-        cell.IsSelected = true;
-        SelectedCell = cell;
-        
-        // Опционально: обновляем текущую дату вьюмодели для заголовка или других нужд
-        // CurrentDate = new DateTime(...); 
+        // Выделяем новую и сохраняем его для отображения в панели деталей
+        clickedCell.IsSelected = true;
+        SelectedDate = clickedCell;
     }
 }

@@ -1,6 +1,34 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Стили для кнопки-ячейки -->
+    <Style Selector="Button.day-cell">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.1"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <!-- Наведение на кнопку -->
+    <Style Selector="Button.day-cell:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2Opacity20}"/>
+    </Style>
+
+    <!-- Выбранная кнопка -->
+    <Style Selector="Button.day-cell:selected">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight3Opacity20}"/>
+        <!-- Или любой другой цвет фона для выбранного состояния -->
+    </Style>
+    
+    
     <!-- Day Cell Border Style -->
     <Style Selector="Border.day-cell">
         <Setter Property="CornerRadius" Value="8"/>

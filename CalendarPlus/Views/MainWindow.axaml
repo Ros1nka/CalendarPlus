@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:CalendarPlus.ViewModels"
         xmlns:models="using:CalendarPlus.Models"
+        x:Name="RootWindow"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:CalendarPlus.Converters"
@@ -117,32 +118,55 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="models:DateCell">
-                                            <Border Classes="day-cell"
+                                            <Button Classes="day-cell"
                                                     Classes.selected="{Binding IsSelected}"
-                                                    Tapped="DayCell_Tapped">
+                                                    Command="{Binding #RootWindow.DataContext.SelectDayCommand,
+                                                    RelativeSource={RelativeSource AncestorType=views:Clishe}}">
+
                                                 <Grid ColumnDefinitions="Auto, *">
-                                                    <Border Grid.Column="0" 
-                                                            Width="32" Height="32" 
+                                                    <Border Grid.Column="0"
+                                                            Width="32" Height="32"
                                                             CornerRadius="16"
                                                             BorderBrush="Black"
                                                             BorderThickness="2,1,1,1"
                                                             HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"></Border>
-                                                    <TextBlock Grid.Column="0" 
+                                                            VerticalAlignment="Center">
+                                                    </Border>
+                                                    <TextBlock Grid.Column="0"
                                                                Text="{Binding Day}"
                                                                Classes="day-cell-text"
                                                                Classes.other-month="{Binding !IsCurrentMonth}"
                                                                Classes.today="{Binding IsToday}"
                                                                Classes.weekend="{Binding IsWeekend}" />
-                                                    <Grid Grid.Column="1" RowDefinitions="6, 6, 6, 6, 6" ColumnDefinitions="6, 6, 6, 6, 6">
-                                                        <Rectangle Grid.Column="0" Grid.Row="0" Margin="1" Fill="Blue"></Rectangle>
-                                                        <Rectangle Grid.Column="1" Grid.Row="1" Margin="1"  Fill="Crimson"></Rectangle>
-                                                        <Rectangle Grid.Column="2" Grid.Row="2" Margin="1"  Fill="Blue"></Rectangle>
-                                                        <Rectangle Grid.Column="1" Grid.Row="3" Margin="1"  Fill="Violet"></Rectangle>
-                                                        <Rectangle Grid.Column="0" Grid.Row="4" Margin="1"  Fill="DarkCyan"></Rectangle>
+                                                    <Grid Grid.Column="1" RowDefinitions="6, 6, 6, 6, 6">
+                                                        <Grid Grid.Row="0" ColumnDefinitions="4, 4, 4" Margin="0,1,6,1">
+                                                            <Rectangle Grid.Column="0" Fill="Blue"></Rectangle>
+                                                            <Rectangle Grid.Column="1" Fill="Yellow"></Rectangle>
+                                                            <Rectangle Grid.Column="2" Fill="Red"></Rectangle>
+                                                        </Grid>
+                                                        <Grid Grid.Row="1" ColumnDefinitions="4, 4, 4" Margin="3,1,3,1">
+                                                            <Rectangle Grid.Column="0" Fill="Blue"></Rectangle>
+                                                            <Rectangle Grid.Column="1" Fill="Yellow"></Rectangle>
+                                                            <Rectangle Grid.Column="2" Fill="Red"></Rectangle>
+                                                        </Grid>
+                                                        <Grid Grid.Row="2" ColumnDefinitions="4, 4, 4" Margin="6,1,0,1">
+                                                            <Rectangle Grid.Column="0" Fill="Blue"></Rectangle>
+                                                            <Rectangle Grid.Column="1" Fill="Yellow"></Rectangle>
+                                                            <Rectangle Grid.Column="2" Fill="Red"></Rectangle>
+                                                        </Grid>
+                                                        <Grid Grid.Row="3" ColumnDefinitions="4, 4, 4" Margin="3,1,3,1">
+                                                            <Rectangle Grid.Column="0" Fill="Blue"></Rectangle>
+                                                            <Rectangle Grid.Column="1" Fill="Yellow"></Rectangle>
+                                                            <Rectangle Grid.Column="2" Fill="Red"></Rectangle>
+                                                        </Grid>
+                                                        <Grid Grid.Row="4" ColumnDefinitions="4, 4, 4" Margin="0,1,6,1">
+                                                            <Rectangle Grid.Column="0" Fill="Blue"></Rectangle>
+                                                            <Rectangle Grid.Column="1" Fill="Yellow"></Rectangle>
+                                                            <Rectangle Grid.Column="2" Fill="Red"></Rectangle>
+                                                        </Grid>
                                                     </Grid>
                                                 </Grid>
-                                            </Border>
+                                            </Button>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>

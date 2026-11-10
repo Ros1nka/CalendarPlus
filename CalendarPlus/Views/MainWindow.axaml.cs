@@ -11,16 +11,4 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
-
-    private void DayCell_Tapped(object? sender, TappedEventArgs e)
-    {
-        if (DataContext is MainWindowViewModel viewModel && sender is Border border)
-        {
-            var cell = border.DataContext as DateCell;
-            if (cell != null)
-            {
-                viewModel.SelectDayCommand.Execute(cell);
-            }
-        }
-    }
 }
