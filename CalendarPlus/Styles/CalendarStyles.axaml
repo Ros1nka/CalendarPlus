@@ -16,12 +16,12 @@
     </Style>
 
     <Style Selector="Border.day-cell.selected">
-        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"/>
+        <Setter Property="Background" Value="SteelBlue"/>
         <Setter Property="TextBlock.Foreground" Value="White"/>
     </Style>
 
     <Style Selector="Border.day-cell.selected:pointerover">
-        <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}"/>
+        <Setter Property="Background" Value="RoyalBlue"/>
     </Style>
 
     <!-- Day Cell Text Style -->
@@ -42,7 +42,7 @@
     </Style>
     
     <Style Selector="TextBlock.day-cell-text.weekend">
-        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="DarkRed"/>
     </Style>
 
     <!-- Weekday Header Style -->

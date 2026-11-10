@@ -120,11 +120,28 @@
                                             <Border Classes="day-cell"
                                                     Classes.selected="{Binding IsSelected}"
                                                     Tapped="DayCell_Tapped">
-                                                <TextBlock Text="{Binding Day}"
-                                                           Classes="day-cell-text"
-                                                           Classes.other-month="{Binding !IsCurrentMonth}"
-                                                           Classes.today="{Binding IsToday}"
-                                                           Classes.weekend="{Binding IsWeekend}"/>
+                                                <Grid ColumnDefinitions="Auto, *">
+                                                    <Border Grid.Column="0" 
+                                                            Width="32" Height="32" 
+                                                            CornerRadius="16"
+                                                            BorderBrush="Black"
+                                                            BorderThickness="2,1,1,1"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"></Border>
+                                                    <TextBlock Grid.Column="0" 
+                                                               Text="{Binding Day}"
+                                                               Classes="day-cell-text"
+                                                               Classes.other-month="{Binding !IsCurrentMonth}"
+                                                               Classes.today="{Binding IsToday}"
+                                                               Classes.weekend="{Binding IsWeekend}" />
+                                                    <Grid Grid.Column="1" RowDefinitions="6, 6, 6, 6, 6" ColumnDefinitions="6, 6, 6, 6, 6">
+                                                        <Rectangle Grid.Column="0" Grid.Row="0" Margin="1" Fill="Blue"></Rectangle>
+                                                        <Rectangle Grid.Column="1" Grid.Row="1" Margin="1"  Fill="Crimson"></Rectangle>
+                                                        <Rectangle Grid.Column="2" Grid.Row="2" Margin="1"  Fill="Blue"></Rectangle>
+                                                        <Rectangle Grid.Column="1" Grid.Row="3" Margin="1"  Fill="Violet"></Rectangle>
+                                                        <Rectangle Grid.Column="0" Grid.Row="4" Margin="1"  Fill="DarkCyan"></Rectangle>
+                                                    </Grid>
+                                                </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
