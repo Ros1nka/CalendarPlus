@@ -24,8 +24,9 @@
 
     <!-- Выбранная кнопка -->
     <Style Selector="Button.day-cell:selected">
-        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight3Opacity20}"/>
-        <!-- Или любой другой цвет фона для выбранного состояния -->
+        <!-- <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight3Opacity20}"/> -->
+        <Setter Property="Width" Value="48"/>
+        <Setter Property="Height" Value="48"/>
     </Style>
     
     

@@ -2,12 +2,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:CalendarPlus.ViewModels"
         xmlns:models="using:CalendarPlus.Models"
-        x:Name="RootWindow"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:CalendarPlus.Converters"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="650"
         x:Class="CalendarPlus.Views.MainWindow"
+        x:Name="RootWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="CalendarPlus"
@@ -120,8 +120,8 @@
                                         <DataTemplate x:DataType="models:DateCell">
                                             <Button Classes="day-cell"
                                                     Classes.selected="{Binding IsSelected}"
-                                                    Command="{Binding #RootWindow.DataContext.SelectDayCommand,
-                                                    RelativeSource={RelativeSource AncestorType=views:Clishe}}">
+                                                    Tag="{Binding}"
+                                                    Click="DayCell_Click">
 
                                                 <Grid ColumnDefinitions="Auto, *">
                                                     <Border Grid.Column="0"
